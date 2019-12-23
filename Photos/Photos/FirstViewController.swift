@@ -62,7 +62,7 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
       self.tableView.reloadData()
     }
     
-    request.requestGet(method: "albums")
+    request.requestGet(method: "albums",parameter: nil)
     
     
   }
@@ -80,6 +80,16 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     cell.textLabel?.text  = albumToShow.title
     
     return cell
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let albumToShow:Album = self.albums[indexPath.row]
+    
+    let albumDetail:AlbumDetail = AlbumDetail(nibName: "AlbumDetail", bundle: nil)
+    albumDetail.albumToShow = albumToShow
+    
+    self.navigationController?.pushViewController(albumDetail, animated: true)
+    
   }
 
 }

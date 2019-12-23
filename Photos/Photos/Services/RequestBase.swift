@@ -30,11 +30,11 @@ class RequestBase: NSObject, RequestBaseProtocol {
     self.urlStr = newURL
   }
   
-  func requestGet( method:String  ) -> Void {
+  func requestGet( method:String, parameter:[String:Any]?  ) -> Void {
     
     let manager = AFHTTPSessionManager(baseURL: URL(string: urlStr) )
     
-    manager.get(method, parameters: nil, progress: nil, success: {
+    manager.get(method, parameters: parameter, progress: nil, success: {
       (task: URLSessionDataTask!, responseObject: Any!) in
 
       let response = task.response as! HTTPURLResponse
@@ -54,13 +54,13 @@ class RequestBase: NSObject, RequestBaseProtocol {
   // MARK: protocol
   func parse(data: Any!) {
     if self.blockSuccess != nil {
-      self.blockSuccess(data)
+      self.blockSuccess(data as Any)
     }
   }
   
   func parseDataError(data: Any!) {
     if self.blockError != nil {
-      self.blockError(data)
+      self.blockError(data as Any)
     }
   }
   
