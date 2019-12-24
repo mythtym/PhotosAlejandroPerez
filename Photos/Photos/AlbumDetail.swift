@@ -81,6 +81,9 @@ class AlbumDetail: UICollectionViewController {
     // handle tap events
     
     print("You selected cell #\(indexPath.item)!")
+    let photoDetail:PhotoDetail = PhotoDetail(nibName: "PhotoDetail", bundle: nil)
+    photoDetail.photoToShow = self.photos[indexPath.row]
+    self.navigationController?.pushViewController(photoDetail, animated: true)
   }
 
     // MARK: UICollectionViewDelegate
