@@ -8,13 +8,16 @@
 
 import UIKit
 
-class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, LastImagesProtocol {
+  
   
   @IBOutlet weak var tableView: UITableView!
   
   var albums = [Album]()
   
   let spinner = UIActivityIndicatorView.init(style: .gray)
+  
+  var lastSelectAlbum:IndexPath = IndexPath()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -79,16 +82,30 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     let albumToShow:Album = self.albums[indexPath.row]
     cell.textLabel?.text  = albumToShow.title
     
+    if albumToShow.lastImage != "" {
+      cell.imageView?.setImageWith( URL(string: albumToShow.lastImage)! )
+    }
+   
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    self.lastSelectAlbum = indexPath
     let albumToShow:Album = self.albums[indexPath.row]
     
     let albumDetail:AlbumDetail = AlbumDetail(nibName: "AlbumDetail", bundle: nil)
     albumDetail.albumToShow = albumToShow
-    
+    albumDetail.delegate = self
     self.navigationController?.pushViewController(albumDetail, animated: true)
+    
+  }
+  //MARK: Last Image Protocol
+  func lastImage(image: String!) {
+    self.albums[self.lastSelectAlbum.row].lastImage = image
+    
+    self.tableView.beginUpdates()
+    self.tableView.reloadRows(at: [self.lastSelectAlbum], with: .none)
+    self.tableView.endUpdates()
     
   }
 

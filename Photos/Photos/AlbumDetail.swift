@@ -10,11 +10,17 @@ import UIKit
 
 private let reuseIdentifier = "CellWithImage"
 
+@objc protocol LastImagesProtocol {
+  func lastImage(image:String!) -> Void
+}
+
 class AlbumDetail: UICollectionViewController {
   
   var albumToShow:Album!
 
   var photos:[Photo] = [Photo]()
+  
+  weak var delegate:LastImagesProtocol?
   
   override func viewDidLoad() {
 
@@ -40,7 +46,13 @@ class AlbumDetail: UICollectionViewController {
         self.photos.append(photo)
       }
       self.collectionView.reloadData()
-
+      
+      guard let urlLastImage:String = self.photos.last?.thumbnailUrl else {
+        return
+      }
+      
+      self.delegate?.lastImage(image: urlLastImage )
+      
     }
     
     request.requestGet(method: "photos", parameter:["albumId":self.albumToShow.id])
@@ -79,8 +91,6 @@ class AlbumDetail: UICollectionViewController {
   
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     // handle tap events
-    
-    print("You selected cell #\(indexPath.item)!")
     let photoDetail:PhotoDetail = PhotoDetail(nibName: "PhotoDetail", bundle: nil)
     photoDetail.photoToShow = self.photos[indexPath.row]
     self.navigationController?.pushViewController(photoDetail, animated: true)

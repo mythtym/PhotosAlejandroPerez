@@ -12,6 +12,7 @@ class Album: NSObject {
   var userId:NSInteger = 0
   var id:NSInteger = 0
   var title:String = ""
+  var lastImage = ""
   
   init(dictionary:[String:Any]) {
     self.title = dictionary["title"] as! String
